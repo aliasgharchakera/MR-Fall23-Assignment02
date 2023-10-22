@@ -7,6 +7,8 @@
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{listings}
+\usepackage{float}
 
 % Header and footer.
 \pagestyle{headandfoot}
@@ -33,12 +35,65 @@
 \maketitle
 
 \begin{questions}
-\question
-\begin{parts}
-\part
-\begin{solution}
-\end{solution}
-\end{parts}
+    \question Problem 1
+
+    \question Problem 2
+    \question Problem 3
+    \subsection*{Code}
+
+    \begin{lstlisting}
+    function [v, w] = pidPathFollower(Pose, WayPoints)
+        persistent n;
+        persistent k;
+        if (isempty(n))
+            n = 2;
+            k = 0;
+        end
+        % Completed the path
+        if n > length(WayPoints)
+            v = 0;
+            w = 0;
+        else
+        x = Pose(1);
+        y = Pose(2);
+        phi = Pose(3);
+        R = [cos(phi) sin(phi); -sin(phi) cos(phi)];
+        % WayPointsPhi = [0 pi/2 pi 3*pi/2];
+
+        xref = WayPoints(n, 1);
+        yref = WayPoints(n, 2);
+        phiref = WayPoints(n, 3);
+
+        ep = R*([xref; yref]-[x; y]);
+        xe = ep(1);
+        ye = ep(2);
+        d = sqrt(ye^2 + xe^2);
+        eps = 0.1;
+
+        phie = phiref - phi;
+        if d < eps
+            n = n + 1;
+        end
+        % v = 0.2*xe + 0.1;
+        % k = 60*(ye) + 0.08*sin(-phie);  
+        % w = v*k;
+
+        v = 0.8*xe + 0.8;
+        k = 60*(ye) + 0.15*sin(-phie);
+        w = v*k;
+
+        end
+    end
+    \end{lstlisting}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/2.png}
+        \caption{PID Path Follower}
+        \label{fig:my_label}
+    \end{figure}
+
+
 \end{questions}
 
 \end{document}
